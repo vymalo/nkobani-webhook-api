@@ -1,3 +1,3 @@
 # Changelog
 
-- Added the first basic version of the script
+- Updated README.md
