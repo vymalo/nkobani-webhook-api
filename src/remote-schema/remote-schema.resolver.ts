@@ -1,4 +1,4 @@
-import { Args, Int, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { User } from './models/user';
 import { KeycloakAdminClient } from '@s3pweb/keycloak-admin-client-cjs';
 
