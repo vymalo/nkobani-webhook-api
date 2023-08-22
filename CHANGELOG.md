@@ -1,3 +1,3 @@
 # Changelog
 
-- Updated README.md
+- Removed apollo studio
