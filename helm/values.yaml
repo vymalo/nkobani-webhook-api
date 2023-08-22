@@ -83,7 +83,7 @@ affinity: {}
 
 secrets:
   redis-url: redis://default:2mcnYRbeyv@redis-master.redis.svc.cluster.local:6379/1
-  rabbitmq-url: amqp://user:chXDjQwK0wiRO2kc@rabbitmq.rabbitmq.svc.cluster.local:5672/
+  rabbitmq-url: amqp://keycloak:e0163fe2-573b-4d30-934d-f88c3f7fa993@rabbitmq.rabbitmq.svc.cluster.local:5672/keycloak
   keycloak-client-id: nkobani-webhook-api-client
   keycloak-client-secret: N3dQU76ur6hnraPq6MgRTu69Vkgs6c9h
   hasura-admin-secret: 2mcnYRbeyv
