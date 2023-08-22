@@ -1,3 +1,3 @@
 # Changelog
 
-- Fixed Keycloak client login type
+- Basic username (it's not even required)

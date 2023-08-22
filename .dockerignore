@@ -1,2 +1,4 @@
 .env
 .github
+dist
+node_modules
