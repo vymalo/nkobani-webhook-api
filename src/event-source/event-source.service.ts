@@ -18,9 +18,7 @@ export class EventSourceService {
   constructor(@InjectGraphQLClient() private readonly client: GraphQLClient) {}
 
   public async publishEvent(data: any) {
-    // TODO
     const variables = { userId: data.userId, userName: data.details?.username };
-
     await this.client.request(query, variables);
   }
 }
