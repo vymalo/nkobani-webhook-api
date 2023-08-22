@@ -1,21 +1,27 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventSourceService } from './event-source.service';
-import { CqrsModule } from '@nestjs/cqrs';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EventSourceController } from './event-source.controller';
-import {
-  NestjsQueryGraphQLModule,
-  pubSubToken,
-} from '@nestjs-query/query-graphql';
-import { NestjsQueryTypeOrmModule } from '@nestjs-query/query-typeorm';
-import { EventReceivedEntity } from './event-received.entity';
-import { EventReceived } from './model/event-received';
-import { PubSubModule } from '../pub-sub/pub-sub.module';
+import { GraphQLRequestModule } from '@golevelup/nestjs-graphql-request';
 
 @Module({
   imports: [
-    CqrsModule,
+    GraphQLRequestModule.forRootAsync(GraphQLRequestModule, {
+      // Exposes configuration options based on the graphql-request package
+      useFactory: (cs: ConfigService) => ({
+        endpoint: cs.getOrThrow('HASURA_GRAPHQL_ENDPOINT'),
+        options: {
+          headers: {
+            'content-type': 'application/json',
+            'x-hasura-admin-secret': cs.getOrThrow(
+              'HASURA_GRAPHQL_ADMIN_SECRET',
+            ),
+          },
+        },
+      }),
+      inject: [ConfigService],
+    }),
     ClientsModule.registerAsync([
       {
         name: 'WEBHOOK_SERVICE',
@@ -32,27 +38,6 @@ import { PubSubModule } from '../pub-sub/pub-sub.module';
         inject: [ConfigService],
       },
     ]),
-    NestjsQueryGraphQLModule.forFeature({
-      imports: [
-        PubSubModule,
-        NestjsQueryTypeOrmModule.forFeature([EventReceivedEntity]),
-      ],
-      pubSub: {
-        provide: pubSubToken(),
-        useExisting: 'PUB_SUB',
-      },
-      resolvers: [
-        {
-          DTOClass: EventReceived,
-          EntityClass: EventReceivedEntity,
-          delete: { disabled: true },
-          update: { disabled: true },
-          create: { disabled: true },
-          enableTotalCount: true,
-          enableAggregate: true,
-        },
-      ],
-    }),
   ],
   providers: [EventSourceService],
   controllers: [EventSourceController],

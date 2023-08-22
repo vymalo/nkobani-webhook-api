@@ -1,30 +1,26 @@
 import { Injectable } from '@nestjs/common';
-import { EventBus } from '@nestjs/cqrs';
-import { NewAmqpMessageEvent } from '../cqrs/events/new-amqp-message.event';
-import { EventReceivedEntity } from './event-received.entity';
-import { InjectQueryService, QueryService } from '@nestjs-query/core';
+import { InjectGraphQLClient } from '@golevelup/nestjs-graphql-request';
+import { gql, GraphQLClient } from 'graphql-request';
+
+const query = gql`
+  mutation ($userId: String!, $userName: String) {
+    insert_users(
+      objects: [{ id: $userId, name: $userName, last_seen: "now()" }]
+      on_conflict: { constraint: users_pkey, update_columns: [last_seen, name] }
+    ) {
+      affected_rows
+    }
+  }
+`;
 
 @Injectable()
 export class EventSourceService {
-  constructor(
-    private readonly eventBus: EventBus,
-    @InjectQueryService(EventReceivedEntity)
-    private readonly service: QueryService<EventReceivedEntity>,
-  ) {}
+  constructor(@InjectGraphQLClient() private readonly client: GraphQLClient) {}
 
-  public async publishEvent(
-    data: any,
-    appId: any,
-    params: { headers: any; exchange: any; routingKey: any },
-  ) {
-    const event = new EventReceivedEntity();
-    event.eventTypes = [params.exchange, data?.type, params.routingKey].filter(
-      (value) => !!value,
-    );
-    event.protocol = 'amqp';
-    event.routingKey = params.routingKey;
-    event.exchange = params.exchange;
-    const saved = await this.service.createOne(event);
-    this.eventBus.publish(new NewAmqpMessageEvent(saved, data, appId, params));
+  public async publishEvent(data: any) {
+    // TODO
+    const variables = { userId: data.userId, userName: data.details?.username };
+
+    await this.client.request(query, variables);
   }
 }
