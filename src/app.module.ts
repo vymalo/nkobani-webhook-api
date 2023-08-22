@@ -3,6 +3,7 @@ import { HealthModule } from './health/health.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { KeyvAdapter } from '@apollo/utils.keyvadapter';
 import { EventSourceModule } from './event-source/event-source.module';
 import { RemoteSchemaModule } from './remote-schema/remote-schema.module';
@@ -39,6 +40,10 @@ import * as Joi from 'joi';
       driver: ApolloDriver,
       useFactory: async (cs: ConfigService) => ({
         autoSchemaFile: true,
+        playground: false,
+        plugins: [ApolloServerPluginLandingPageLocalDefault()],
+        introspection: true,
+        csrfPrevention: false,
         cache: new KeyvAdapter(
           new Keyv(cs.getOrThrow('REDIS_URL'), {
             namespace: 'apollo',
