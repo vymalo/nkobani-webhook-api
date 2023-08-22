@@ -1,27 +1,14 @@
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { KeycloakAdminClient } from '@s3pweb/keycloak-admin-client-cjs';
+import { Module, OnModuleInit } from '@nestjs/common';
+import { KeycloakService } from './keycloak.service';
 
 @Module({
-  providers: [
-    {
-      provide: KeycloakAdminClient,
-      inject: [ConfigService],
-      useFactory: async (cs: ConfigService) => {
-        const kcAdminClient = new KeycloakAdminClient({
-          baseUrl: cs.getOrThrow<string>('KEYCLOAK_URL'),
-          realmName: cs.getOrThrow<string>('KEYCLOAK_REALM'),
-        });
-        await kcAdminClient.auth({
-          username: cs.get('KEYCLOAK_ADMIN_USERNAME'),
-          password: cs.get('KEYCLOAK_ADMIN_PASSWORD'),
-          grantType: 'password',
-          clientId: 'admin-cli',
-        });
-        return kcAdminClient;
-      },
-    },
-  ],
-  exports: [KeycloakAdminClient],
+  providers: [KeycloakService],
+  exports: [KeycloakService],
 })
-export class KeycloakModule {}
+export class KeycloakModule implements OnModuleInit {
+  constructor(private readonly keycloakService: KeycloakService) {}
+
+  public async onModuleInit(): Promise<void> {
+    await this.keycloakService.init();
+  }
+}

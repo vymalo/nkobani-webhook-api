@@ -1,16 +1,26 @@
 import { Controller, Logger } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { EventSourceService } from './event-source.service';
+import { ConfigService } from '@nestjs/config';
+import { KeycloakService } from '../keycloak/keycloak.service';
 
 @Controller()
 export class EventSourceController {
   private readonly logger = new Logger(EventSourceController.name);
 
-  constructor(private readonly eventSourceService: EventSourceService) {}
+  constructor(
+    private readonly keycloakService: KeycloakService,
+    private readonly eventSourceService: EventSourceService,
+    private readonly cs: ConfigService,
+  ) {}
 
   @MessagePattern()
   async listenToAll(@Payload() data: any) {
-    if (data.clientId === 'admin-cli') {
+    if (data.clientId === this.cs.get('KEYCLOAK_CLIENT_ID')) {
+      return;
+    }
+
+    if (data.realmId !== this.keycloakService.realmId) {
       return;
     }
 

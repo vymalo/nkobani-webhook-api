@@ -4,9 +4,11 @@ import { EventSourceService } from './event-source.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EventSourceController } from './event-source.controller';
 import { GraphQLRequestModule } from '@golevelup/nestjs-graphql-request';
+import { KeycloakModule } from '../keycloak/keycloak.module';
 
 @Module({
   imports: [
+    KeycloakModule,
     GraphQLRequestModule.forRootAsync(GraphQLRequestModule, {
       // Exposes configuration options based on the graphql-request package
       useFactory: (cs: ConfigService) => ({

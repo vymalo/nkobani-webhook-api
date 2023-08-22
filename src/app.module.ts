@@ -30,7 +30,13 @@ import * as Joi from 'joi';
         HASURA_GRAPHQL_ENDPOINT: Joi.string()
           .uri()
           .default('http://localhost:8080/v1/graphql'),
-        HASURA_GRAPHQL_ADMIN_SECRET: Joi.string().default('some-secret'),
+        HASURA_GRAPHQL_ADMIN_SECRET: Joi.string(),
+        KEYCLOAK_URL: Joi.string().uri().required(),
+        KEYCLOAK_REALM: Joi.string()
+          .pattern(/([a-zA-Z0-9_]+)/)
+          .required(),
+        KEYCLOAK_CLIENT_ID: Joi.string().required(),
+        KEYCLOAK_CLIENT_SECRET: Joi.string().required(),
       }),
       validationOptions: {
         abortEarly: true,
