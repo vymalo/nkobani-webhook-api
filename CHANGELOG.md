@@ -1,3 +1,3 @@
 # Changelog
 
-- Removed apollo studio
+- Fixed Keycloak client login type
