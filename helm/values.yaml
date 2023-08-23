@@ -86,14 +86,14 @@ secrets:
   rabbitmq-url: amqp://keycloak:e0163fe2-573b-4d30-934d-f88c3f7fa993@rabbitmq.rabbitmq.svc.cluster.local:5672/keycloak
   keycloak-client-id: nkobani-webhook-api-client
   keycloak-client-secret: N3dQU76ur6hnraPq6MgRTu69Vkgs6c9h
-  hasura-admin-secret: 2mcnYRbeyv
+  hasura-admin-secret: e1ff6a65-4b81-4fa8-94f8-2eee35638730
 
 keycloak:
   url: https://accounts.ssegning.com
   realm: nkobani
 
 hasura:
-  url: https://nkobani.ssegning.com/v1/graphql
+  url: https://nkobani-api.ssegning.com/v1/graphql
 
 rabbitmq:
   queueName: nkobani-webhook

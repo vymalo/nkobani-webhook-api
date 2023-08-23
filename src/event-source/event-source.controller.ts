@@ -30,7 +30,6 @@ export class EventSourceController {
       case 'REGISTER':
       case 'UPDATE_PROFILE':
       case 'UPDATE_EMAIL':
-      case 'USER-UPDATE':
         await this.eventSourceService.publishEvent(data);
         break;
       default:
