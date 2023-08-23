@@ -26,7 +26,6 @@ export class EventSourceController {
 
     switch (data.type) {
       case 'LOGIN':
-      case 'LOGOUT':
       case 'REGISTER':
       case 'UPDATE_PROFILE':
       case 'UPDATE_EMAIL':
